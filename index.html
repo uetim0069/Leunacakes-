@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEUNA CAKES AND PASTRIES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{--bg:#120a07;--s1:#1b110c;--s2:#241812;--line:#3a2a20;--tx:#fbf3e9;--mu:#a8957f;--ac:#d98d42;--ac2:#f2b26b;--r:12px}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--tx);font:16px/1.6 Geist,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--ac2);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hidden{display:none!important}
+
+/* NAV — v0 style floating pill */
+.nav{position:sticky;top:12px;z-index:50;margin:12px auto 0;max-width:1080px;width:calc(100% - 24px);display:flex;align-items:center;gap:6px;padding:8px 8px 8px 14px;background:rgba(18,10,7,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:13px;letter-spacing:.02em;white-space:nowrap}
+.mark{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--ac2),#8a4a1b);display:grid;place-items:center;font-size:12px;font-weight:800;color:#1b0f0a}
+.slash{color:var(--line);font-size:22px;font-weight:300;margin:0 2px}
+.links{display:flex;gap:2px;margin-left:auto}
+.links a,.links button{font:500 14px Geist,sans-serif;color:var(--mu);padding:7px 13px;border-radius:999px;background:none;border:0;cursor:pointer;transition:.15s}
+.links a:hover,.links button:hover{color:var(--tx);background:var(--s2)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:500 14px Geist,sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--s1);color:var(--tx);cursor:pointer;transition:.15s}
+.btn:hover{background:var(--s2)}
+.btn.pri{background:var(--tx);color:#1b0f0a;border-color:var(--tx)}
+.btn.pri:hover{background:var(--ac2);border-color:var(--ac2)}
+.btn.lg{padding:13px 24px;font-size:15px}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn.del{color:#ff8a7a}
+.burger{display:none;margin-left:auto}
+kbd{font:500 11px 'Geist Mono',monospace;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--mu)}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;padding:110px 0 90px;margin-top:-70px;padding-top:170px;text-align:center;
+ background:radial-gradient(60% 50% at 50% 0%,rgba(217,141,66,.28),transparent 70%),linear-gradient(var(--line) 1px,transparent 1px) 0 0/64px 64px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/64px 64px;
+ -webkit-mask-image:none}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 40%,transparent 20%,var(--bg) 85%);pointer-events:none}
+.hero .wrap{position:relative}
+.pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--ac2);border:1px solid var(--line);background:rgba(36,24,18,.8);padding:5px 14px;border-radius:999px;margin-bottom:28px}
+.dot{width:7px;height:7px;border-radius:50%;background:#5fd38d;box-shadow:0 0 10px #5fd38d}
+h1{font-size:clamp(40px,8vw,88px);line-height:1;letter-spacing:-.045em;font-weight:800;max-width:900px;margin:0 auto}
+h1 span{background:linear-gradient(180deg,#fff,var(--ac2) 70%,var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{max-width:560px;margin:24px auto 36px;color:var(--mu);font-size:18px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.tag{margin-top:48px;color:var(--mu);font-size:14px;font-style:italic}
+
+/* SECTIONS */
+section{padding:72px 0}
+.head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.035em;line-height:1.1}
+.head p{color:var(--mu);margin-top:6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:500 13px Geist,sans-serif;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--mu);cursor:pointer}
+.chip.on{background:var(--tx);color:#1b0f0a;border-color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.card .ph{aspect-ratio:4/3;background:var(--s2);object-fit:cover;width:100%}
+.card .b{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:17px;letter-spacing:-.01em}
+.card p{color:var(--mu);font-size:14px;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}
+.price{font:500 15px 'Geist Mono',monospace;color:var(--ac2)}
+.soldout{opacity:.55}
+.gal{columns:3 220px;column-gap:12px}
+.gal figure{break-inside:avoid;margin-bottom:12px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);position:relative}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 12px 10px;font-size:13px;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:40px;text-align:center;color:var(--mu);grid-column:1/-1}
+.band{border:1px solid var(--line);border-radius:20px;padding:56px 24px;text-align:center;background:radial-gradient(60% 100% at 50% 0%,rgba(217,141,66,.22),var(--s1))}
+.band p{color:var(--mu);margin:12px 0 26px}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--mu);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ADMIN */
+#admin{border-top:1px solid var(--line);background:var(--s1)}
+.tabs{display:flex;gap:6px;margin-bottom:20px}
+.panel{display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:20px}
+.box{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+label{display:block;font-size:13px;color:var(--mu);margin:12px 0 5px}
+input,select,textarea{width:100%;font:15px Geist,sans-serif;color:var(--tx);background:var(--s1);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+textarea{min-height:80px;resize:vertical}
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.item img,.item .t{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--s2)}
+.item .n{flex:1;min-width:0}.item .n b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .n small{color:var(--mu)}
+.modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:20px}
+.modal .box{width:100%;max-width:380px;background:var(--s1)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--tx);color:#1b0f0a;padding:10px 18px;border-radius:999px;font-size:14px;z-index:200;font-weight:500}
+.note{background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--mu);margin-bottom:16px}
+
+@media(max-width:760px){
+ .links{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:8px}
+ .links.open{display:flex}.burger{display:inline-flex}.nav .btn.pri{display:none}
+ .panel{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a href="#home" class="brand"><span class="mark">L</span>LEUNA CAKES AND PASTRIES</a>
+  <nav class="links" id="links">
+    <a href="#products">Products</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#order">Contact</a>
+    <button id="adminLink" class="hidden" onclick="go('admin')">Admin</button>
+    <button id="signOut" class="hidden" onclick="logout()">Sign out</button>
+  </nav>
+  <a class="btn pri" href="#products">Order now</a>
+  <button class="btn burger" aria-label="Menu" onclick="links.classList.toggle('open')">Menu</button>
+</header>
+
+<main id="home">
+<div class="hero">
+  <div class="wrap">
+    <div class="pill"><span class="dot"></span>Now taking orders for this week</div>
+    <h1>Freshly baked cakes, made to make <span>your day sweeter.</span></h1>
+    <p class="sub">Custom celebration cakes, cupcakes and pastries, baked from scratch and delivered to your door.</p>
+    <div class="cta">
+      <a class="btn pri lg" href="#products">Order a cake</a>
+      <a class="btn lg" href="#gallery">See our latest bakes</a>
+    </div>
+    <p class="tag">Where every crumb tells a story of deliciousness…</p>
+  </div>
+</div>
+
+<section id="products"><div class="wrap">
+  <div class="head">
+    <div><h2>Available now</h2><p>Fresh from the oven. Tap order to confirm on WhatsApp.</p></div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="grid" id="productGrid"></div>
+</div></section>
+
+<section id="gallery" style="padding-top:0"><div class="wrap">
+  <div class="head"><div><h2>Latest from our kitchen</h2><p>Real cakes, baked for real celebrations.</p></div></div>
+  <div class="gal" id="galGrid"></div>
+</div></section>
+
+<section id="order"><div class="wrap">
+  <div class="band">
+    <h2>Planning an event?</h2>
+    <p>Tell us the date, size and flavour. We will send a quote within the hour.</p>
+    <a class="btn pri lg" id="waMain" target="_blank" rel="noopener" href="#">Chat with us on WhatsApp</a>
+  </div>
+</div></section>
+</main>
+
+<!-- ADMIN CONSOLE (rendered only for approved admins) -->
+<section id="admin" class="hidden"><div class="wrap">
+  <div class="head"><div><h2>Admin console</h2><p id="who"></p></div></div>
+  <div class="tabs">
+    <button class="chip on" data-tab="tp" onclick="tab('tp')">Products</button>
+    <button class="chip" data-tab="tg" onclick="tab('tg')">Gallery</button>
+  </div>
+
+  <div id="tp" class="panel">
+    <form class="box" onsubmit="addProduct(event)">
+      <b>Add a product</b>
+      <label>Name</label><input id="pName" required>
+      <label>Description</label><textarea id="pDesc"></textarea>
+      <label>Price (₦)</label><input id="pPrice" type="number" min="0" step="0.01" required>
+      <label>Category</label>
+      <select id="pCat"><option>Cakes</option><option>Cupcakes</option><option>Pastries</option><option>Small chops</option><option>Other</option></select>
+      <label>Photo</label><input id="pImg" type="file" accept="image/*">
+      <button class="btn pri" style="margin-top:16px;width:100%;justify-content:center" id="pBtn">Add product</button>
+    </form>
+    <div class="box"><b>Your products</b><div class="list" id="adminProducts" style="margin-top:12px"></div></div>
+  </div>
+
+  <div id="tg" class="panel hidden">
+    <form class="box" onsubmit="addPhoto(event)">
+      <b>Upload latest pictures</b>
+      <label>Photos (select several)</label><input id="gImg" type="file" accept="image/*" multiple required>
+      <label>Caption (optional)</label><input id="gCap">
+      <button class="btn pri" style="margin-top:16px;width:100%;justify-content:center" id="gBtn">Upload pictures</button>
+    </form>
+    <div class="box"><b>Gallery</b><div class="list" id="adminGallery" style="margin-top:12px"></div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>© <span id="yr"></span> LEUNA CAKES AND PASTRIES</span>
+  <a href="#admin-login" onclick="openLogin(event)">Staff sign in</a>
+</div></footer>
+
+<div class="modal hidden" id="loginModal" onclick="if(event.target===this)this.classList.add('hidden')">
+  <form class="box" onsubmit="login(event)">
+    <b>Staff sign in</b>
+    <label>Email</label><input id="lEmail" type="email" required autocomplete="username">
+    <label>Password</label><input id="lPass" type="password" required autocomplete="current-password">
+    <button class="btn pri" style="margin-top:16px;width:100%;justify-content:center">Sign in</button>
+  </form>
+</div>
+
+<script>
+/* ===== 1. CONFIG — paste your own values ===== */
+const SUPABASE_URL = "";        // e.g. https://abcd1234.supabase.co
+const SUPABASE_ANON_KEY = "";   // Project Settings > API > anon public key
+const WHATSAPP = "2340000000000"; // your number, country code first, no +
+/* ============================================= */
+
+const $ = id => document.getElementById(id);
+const naira = n => "₦" + Number(n).toLocaleString("en-NG");
+const live = SUPABASE_URL && SUPABASE_ANON_KEY;
+const sb = live ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const BUCKET = "leuna-media";
+let products = [], gallery = [], cat = "All", isAdmin = false;
+
+// Demo data shown until Supabase is configured
+const demoP = [
+  {id:"d1",name:"Classic Chocolate Cake",description:"Rich, moist chocolate sponge with ganache.",price:25000,category:"Cakes",available:true},
+  {id:"d2",name:"Vanilla Cupcakes (box of 6)",description:"Buttercream swirls, finished with sprinkles.",price:9000,category:"Cupcakes",available:true},
+  {id:"d3",name:"Meat Pie",description:"Flaky pastry, peppery beef filling.",price:1500,category:"Pastries",available:true}];
+
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2600)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function go(id){$(id).scrollIntoView({behavior:"smooth"});links.classList.remove("open")}
+function tab(t){["tp","tg"].forEach(x=>$(x).classList.toggle("hidden",x!==t));document.querySelectorAll(".tabs .chip").forEach(c=>c.classList.toggle("on",c.dataset.tab===t))}
+const wa = msg => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+
+/* ---- Public rendering ---- */
+function renderProducts(){
+  const cats = ["All",...new Set(products.map(p=>p.category))];
+  $("chips").innerHTML = cats.map(c=>`<button class="chip ${c===cat?"on":""}" onclick="cat='${esc(c)}';renderProducts()">${esc(c)}</button>`).join("");
+  const list = products.filter(p=>cat==="All"||p.category===cat);
+  $("productGrid").innerHTML = list.length ? list.map(p=>`
+    <article class="card ${p.available?"":"soldout"}">
+      ${p.image_url?`<img class="ph" loading="lazy" src="${esc(p.image_url)}" alt="${esc(p.name)}">`:`<div class="ph"></div>`}
+      <div class="b"><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p>
+        <div class="row"><span class="price">${naira(p.price)}</span>
+        ${p.available?`<a class="btn sm pri" target="_blank" rel="noopener" href="${wa("Hello LEUNA CAKES AND PASTRIES, I would like to order: "+p.name)}">Order</a>`:`<span class="btn sm">Sold out</span>`}</div>
+      </div></article>`).join("") : `<div class="empty">No products yet. Check back soon.</div>`;
+}
+function renderGallery(){
+  $("galGrid").innerHTML = gallery.length ? gallery.map(g=>`<figure><img loading="lazy" src="${esc(g.image_url)}" alt="${esc(g.caption||"Leuna bake")}">${g.caption?`<figcaption>${esc(g.caption)}</figcaption>`:""}</figure>`).join("") : `<div class="empty">New pictures are coming soon.</div>`;
+}
+function renderAdmin(){
+  $("adminProducts").innerHTML = products.map(p=>`<div class="item">${p.image_url?`<img src="${esc(p.image_url)}" alt="">`:`<div class="t"></div>`}
+    <div class="n"><b>${esc(p.name)}</b><small>${naira(p.price)} · ${p.available?"Available":"Sold out"}</small></div>
+    <button class="btn sm" onclick="toggle('${p.id}')">${p.available?"Mark sold out":"Mark available"}</button>
+    <button class="btn sm del" onclick="delProduct('${p.id}')">Delete</button></div>`).join("")||"<small>No products yet.</small>";
+  $("adminGallery").innerHTML = gallery.map(g=>`<div class="item"><img src="${esc(g.image_url)}" alt=""><div class="n"><b>${esc(g.caption||"Untitled")}</b></div>
+    <button class="btn sm del" onclick="delPhoto('${g.id}')">Delete</button></div>`).join("")||"<small>No pictures yet.</small>";
+}
+const refresh = () => { renderProducts(); renderGallery(); if(isAdmin) renderAdmin(); };
+
+async function load(){
+  if(!live){products=demoP;gallery=[];refresh();return}
+  const [p,g] = await Promise.all([
+    sb.from("products").select("*").order("created_at",{ascending:false}),
+    sb.from("gallery").select("*").order("created_at",{ascending:false})]);
+  if(p.error||g.error) toast("Could not load data. Check your Supabase config.");
+  products = p.data||[]; gallery = g.data||[]; refresh();
+}
+
+/* ---- Auth: admin console is hidden unless the user is in the admins table ---- */
+async function checkAdmin(){
+  isAdmin = false;
+  if(live){
+    const {data:{session}} = await sb.auth.getSession();
+    if(session){
+      const {data} = await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+      isAdmin = !!data;
+      if(isAdmin) $("who").textContent = "Signed in as " + session.user.email;
+      else await sb.auth.signOut();
+    }
+  }
+  ["admin","adminLink","signOut"].forEach(id=>$(id).classList.toggle("hidden",!isAdmin));
+  if(isAdmin) renderAdmin();
+}
+function openLogin(e){e.preventDefault();if(!live)return toast("Add your Supabase keys in index.html first.");$("loginModal").classList.remove("hidden")}
+async function login(e){
+  e.preventDefault();
+  const {error} = await sb.auth.signInWithPassword({email:$("lEmail").value,password:$("lPass").value});
+  if(error) return toast("Sign in failed. Check your email and password.");
+  await checkAdmin();
+  if(!isAdmin) return toast("This account is not an approved admin.");
+  $("loginModal").classList.add("hidden"); toast("Signed in"); go("admin");
+}
+async function logout(){await sb.auth.signOut();await checkAdmin();toast("Signed out");go("home")}
+
+/* ---- Admin actions ---- */
+async function upload(file){
+  const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}-${file.name.replace(/[^\w.]/g,"_")}`;
+  const {error} = await sb.storage.from(BUCKET).upload(path,file,{cacheControl:"31536000"});
+  if(error) throw error;
+  return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+}
+async function addProduct(e){
+  e.preventDefault(); const b=$("pBtn"); b.disabled=true; b.textContent="Adding…";
+  try{
+    const f=$("pImg").files[0];
+    const image_url = f ? await upload(f) : null;
+    const {error} = await sb.from("products").insert({name:$("pName").value.trim(),description:$("pDesc").value.trim(),price:$("pPrice").value,category:$("pCat").value,image_url});
+    if(error) throw error;
+    e.target.reset(); toast("Product added"); await load();
+  }catch(err){toast("Could not add product: "+err.message)}
+  b.disabled=false; b.textContent="Add product";
+}
+async function toggle(id){const p=products.find(x=>x.id===id);const {error}=await sb.from("products").update({available:!p.available}).eq("id",id);error?toast(error.message):load()}
+async function delProduct(id){if(!confirm("Delete this product?"))return;const {error}=await sb.from("products").delete().eq("id",id);error?toast(error.message):(toast("Product deleted"),load())}
+async function addPhoto(e){
+  e.preventDefault(); const b=$("gBtn"); b.disabled=true; b.textContent="Uploading…";
+  try{
+    for(const f of $("gImg").files){
+      const image_url = await upload(f);
+      const {error} = await sb.from("gallery").insert({image_url,caption:$("gCap").value.trim()||null});
+      if(error) throw error;
+    }
+    e.target.reset(); toast("Pictures uploaded"); await load();
+  }catch(err){toast("Upload failed: "+err.message)}
+  b.disabled=false; b.textContent="Upload pictures";
+}
+async function delPhoto(id){if(!confirm("Delete this picture?"))return;const {error}=await sb.from("gallery").delete().eq("id",id);error?toast(error.message):(toast("Picture deleted"),load())}
+
+/* ---- Init ---- */
+$("yr").textContent = new Date().getFullYear();
+$("waMain").href = wa("Hello LEUNA CAKES AND PASTRIES, I would like to place a custom order.");
+if(!live){const n=document.createElement("div");n.className="note wrap";n.style.marginTop="16px";n.textContent="Preview mode: showing sample products. Add your Supabase URL and anon key in index.html to go live.";document.getElementById("home").before(n)}
+load(); checkAdmin();
+if(live) sb.auth.onAuthStateChange(()=>checkAdmin());
+</script>
+</body>
+</html>

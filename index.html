@@ -11,6 +11,7 @@
 :root{--bg:#120a07;--s1:#1b110c;--s2:#241812;--line:#3a2a20;--tx:#fbf3e9;--mu:#a8957f;--ac:#d98d42;--ac2:#f2b26b;--r:12px}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth;scroll-padding-top:80px}
+html,body{overflow-x:hidden}
 body{background:var(--bg);color:var(--tx);font:16px/1.6 Geist,system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
@@ -26,7 +27,7 @@ img{max-width:100%;display:block}
 .links{display:flex;gap:2px;margin-left:auto}
 .links a,.links button{font:500 14px Geist,sans-serif;color:var(--mu);padding:7px 13px;border-radius:999px;background:none;border:0;cursor:pointer;transition:.15s}
 .links a:hover,.links button:hover{color:var(--tx);background:var(--s2)}
-.btn{display:inline-flex;align-items:center;gap:8px;font:500 14px Geist,sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--s1);color:var(--tx);cursor:pointer;transition:.15s}
+.btn{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;font:500 14px Geist,sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--s1);color:var(--tx);cursor:pointer;transition:.15s}
 .btn:hover{background:var(--s2)}
 .btn.pri{background:var(--tx);color:#1b0f0a;border-color:var(--tx)}
 .btn.pri:hover{background:var(--ac2);border-color:var(--ac2)}
@@ -92,28 +93,55 @@ textarea{min-height:80px;resize:vertical}
 .modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:20px}
 .modal .box{width:100%;max-width:380px;background:var(--s1)}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--tx);color:#1b0f0a;padding:10px 18px;border-radius:999px;font-size:14px;z-index:200;font-weight:500}
+.authv{min-height:calc(100vh - 80px);display:grid;place-items:center;padding:110px 20px 60px;background:radial-gradient(50% 40% at 50% 0%,rgba(217,141,66,.22),transparent 70%)}
+.authbox{width:100%;max-width:420px;background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:28px}
+.authbox h2{font-size:28px;margin-bottom:4px}
+.authbox>p{color:var(--mu);font-size:14px;margin-bottom:8px}
+.authbox .btn{width:100%;justify-content:center;margin-top:18px}
+.authbox .alt{margin-top:16px;text-align:center;font-size:14px;color:var(--mu)}
+.authbox .alt a{color:var(--ac2);font-weight:500}
+.authbox .fg{font-size:13px;color:var(--mu);display:inline-block;margin-top:10px;background:none;border:0;cursor:pointer;font-family:inherit}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.brand{min-width:0;flex:0 1 auto}.bt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mob,.mob2,.hello{display:none}.hello{font-size:14px;color:var(--tx);padding:7px 13px;align-items:center}
+.hello:not(.hidden){display:inline-flex}
 .note{background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--mu);margin-bottom:16px}
 
 @media(max-width:760px){
  .links{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:8px}
- .links.open{display:flex}.burger{display:inline-flex}.nav .btn.pri{display:none}
+ .links.open{display:flex}.burger{display:inline-flex}#loginBtn{display:none}.mob:not(.hidden){display:block}.two{grid-template-columns:1fr}
  .panel{grid-template-columns:1fr}
 }
+@media(max-width:760px){
+ .nav{padding:6px 6px 6px 12px;gap:6px}
+ .brand{font-size:11px;gap:7px}.mark{flex:none}
+ .nav .btn{padding:8px 13px;font-size:13px}
+ .links a,.links button,.hello{padding:12px 14px;font-size:15px}
+ .hero{padding-top:150px}
+ h1{font-size:clamp(34px,10.5vw,52px)}.sub{font-size:16px}
+ .authv{padding:100px 16px 40px}.authbox{padding:22px 18px}
+ input,select,textarea{font-size:16px}
+}
+@media(max-width:400px){#signupBtn{display:none}.mob2:not(.hidden){display:block}.brand{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 
 <header class="nav" id="nav">
-  <a href="#home" class="brand"><span class="mark">L</span>LEUNA CAKES AND PASTRIES</a>
+  <a href="#home" class="brand"><span class="mark">L</span><span class="bt">LEUNA CAKES AND PASTRIES</span></a>
   <nav class="links" id="links">
     <a href="#products">Products</a>
     <a href="#gallery">Gallery</a>
     <a href="#order">Contact</a>
+    <span id="hello" class="hello hidden"></span>
+    <a href="#login" id="loginMob" class="mob">Log in</a>
+    <a href="#signup" id="signupMob" class="mob2">Sign up</a>
     <button id="adminLink" class="hidden" onclick="go('admin')">Admin</button>
     <button id="signOut" class="hidden" onclick="logout()">Sign out</button>
   </nav>
-  <a class="btn pri" href="#products">Order now</a>
+  <a class="btn" id="loginBtn" href="#login">Log in</a>
+  <a class="btn pri" id="signupBtn" href="#signup">Sign up</a>
   <button class="btn burger" aria-label="Menu" onclick="links.classList.toggle('open')">Menu</button>
 </header>
 
@@ -186,19 +214,31 @@ textarea{min-height:80px;resize:vertical}
   </div>
 </div></section>
 
-<footer><div class="wrap">
-  <span>© <span id="yr"></span> LEUNA CAKES AND PASTRIES</span>
-  <a href="#admin-login" onclick="openLogin(event)">Staff sign in</a>
-</div></footer>
-
-<div class="modal hidden" id="loginModal" onclick="if(event.target===this)this.classList.add('hidden')">
-  <form class="box" onsubmit="login(event)">
-    <b>Staff sign in</b>
+<div class="authv hidden" id="authView">
+  <form class="authbox hidden" id="loginForm" onsubmit="login(event)">
+    <h2>Welcome back</h2><p>Log in to your LEUNA account.</p>
     <label>Email</label><input id="lEmail" type="email" required autocomplete="username">
     <label>Password</label><input id="lPass" type="password" required autocomplete="current-password">
-    <button class="btn pri" style="margin-top:16px;width:100%;justify-content:center">Sign in</button>
+    <button type="button" class="fg" onclick="forgot()">Forgot your password?</button>
+    <button class="btn pri lg" id="lBtn">Log in</button>
+    <div class="alt">New here? <a href="#signup">Create an account</a></div>
+  </form>
+  <form class="authbox hidden" id="signupForm" onsubmit="signup(event)">
+    <h2>Create your account</h2><p>Order faster and keep track of your favourites.</p>
+    <label>Full name</label><input id="sName" required autocomplete="name">
+    <div class="two"><div><label>Email</label><input id="sEmail" type="email" required autocomplete="email"></div>
+    <div><label>Phone</label><input id="sPhone" type="tel" autocomplete="tel"></div></div>
+    <div class="two"><div><label>Password</label><input id="sPass" type="password" minlength="8" required autocomplete="new-password"></div>
+    <div><label>Confirm password</label><input id="sPass2" type="password" minlength="8" required autocomplete="new-password"></div></div>
+    <button class="btn pri lg" id="sBtn">Create account</button>
+    <div class="alt">Already have an account? <a href="#login">Log in</a></div>
   </form>
 </div>
+
+<footer id="foot"><div class="wrap">
+  <span>© <span id="yr"></span> LEUNA CAKES AND PASTRIES</span>
+  <a href="#login">Staff sign in</a>
+</div></footer>
 
 <script>
 /* ===== 1. CONFIG — paste your own values ===== */
@@ -261,31 +301,70 @@ async function load(){
   products = p.data||[]; gallery = g.data||[]; refresh();
 }
 
-/* ---- Auth: admin console is hidden unless the user is in the admins table ---- */
+/* ---- Auth: customers and admins share login; admin console needs a row in the admins table ---- */
+let user = null;
+function route(){
+  const h = location.hash.slice(1), auth = h==="login"||h==="signup";
+  if(auth && user){location.hash="home";return}
+  $("authView").classList.toggle("hidden",!auth);
+  ["home","foot"].forEach(i=>$(i).classList.toggle("hidden",auth));
+  $("admin").classList.toggle("hidden",auth||!isAdmin);
+  $("loginForm").classList.toggle("hidden",h!=="login");
+  $("signupForm").classList.toggle("hidden",h!=="signup");
+  links.classList.remove("open");
+  if(auth) window.scrollTo(0,0); else if(h&&$(h)) $(h).scrollIntoView();
+}
 async function checkAdmin(){
-  isAdmin = false;
+  isAdmin = false; user = null;
   if(live){
     const {data:{session}} = await sb.auth.getSession();
     if(session){
-      const {data} = await sb.from("admins").select("user_id").eq("user_id",session.user.id).maybeSingle();
+      user = session.user;
+      const {data} = await sb.from("admins").select("user_id").eq("user_id",user.id).maybeSingle();
       isAdmin = !!data;
-      if(isAdmin) $("who").textContent = "Signed in as " + session.user.email;
-      else await sb.auth.signOut();
+      if(isAdmin) $("who").textContent = "Signed in as " + user.email;
     }
   }
-  ["admin","adminLink","signOut"].forEach(id=>$(id).classList.toggle("hidden",!isAdmin));
+  const name = user ? (user.user_metadata?.full_name||user.email).split(" ")[0] : "";
+  $("hello").textContent = name ? "Hi, "+name : "";
+  $("hello").classList.toggle("hidden",!user);
+  $("signOut").classList.toggle("hidden",!user);
+  $("adminLink").classList.toggle("hidden",!isAdmin);
+  ["loginBtn","signupBtn","loginMob","signupMob"].forEach(id=>$(id).classList.toggle("hidden",!!user));
   if(isAdmin) renderAdmin();
+  route();
 }
-function openLogin(e){e.preventDefault();if(!live)return toast("Add your Supabase keys in index.html first.");$("loginModal").classList.remove("hidden")}
 async function login(e){
   e.preventDefault();
+  if(!live) return toast("Add your Supabase keys in index.html first.");
+  const b=$("lBtn"); b.disabled=true;
   const {error} = await sb.auth.signInWithPassword({email:$("lEmail").value,password:$("lPass").value});
-  if(error) return toast("Sign in failed. Check your email and password.");
-  await checkAdmin();
-  if(!isAdmin) return toast("This account is not an approved admin.");
-  $("loginModal").classList.add("hidden"); toast("Signed in"); go("admin");
+  b.disabled=false;
+  if(error) return toast(error.message.includes("confirm")?"Confirm your email first, then log in.":"Log in failed. Check your email and password.");
+  e.target.reset(); toast("Welcome back"); location.hash="home"; await checkAdmin();
 }
-async function logout(){await sb.auth.signOut();await checkAdmin();toast("Signed out");go("home")}
+async function signup(e){
+  e.preventDefault();
+  if(!live) return toast("Add your Supabase keys in index.html first.");
+  if($("sPass").value!==$("sPass2").value) return toast("Passwords do not match.");
+  const b=$("sBtn"); b.disabled=true;
+  const {data,error} = await sb.auth.signUp({email:$("sEmail").value,password:$("sPass").value,
+    options:{data:{full_name:$("sName").value.trim(),phone:$("sPhone").value.trim()},emailRedirectTo:location.origin+location.pathname}});
+  b.disabled=false;
+  if(error) return toast(error.message);
+  e.target.reset();
+  if(data.session){toast("Account created");location.hash="home";await checkAdmin()}
+  else {toast("Account created. Check your email to confirm, then log in.");location.hash="login"}
+}
+async function forgot(){
+  const em=$("lEmail").value.trim();
+  if(!live) return toast("Add your Supabase keys in index.html first.");
+  if(!em) return toast("Enter your email above first.");
+  const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});
+  toast(error?error.message:"Password reset link sent. Check your email.");
+}
+async function logout(){await sb.auth.signOut();await checkAdmin();toast("Logged out");location.hash="home"}
+window.addEventListener("hashchange",route);
 
 /* ---- Admin actions ---- */
 async function upload(file){
@@ -326,7 +405,7 @@ $("yr").textContent = new Date().getFullYear();
 $("waMain").href = wa("Hello LEUNA CAKES AND PASTRIES, I would like to place a custom order.");
 if(!live){const n=document.createElement("div");n.className="note wrap";n.style.marginTop="16px";n.textContent="Preview mode: showing sample products. Add your Supabase URL and anon key in index.html to go live.";document.getElementById("home").before(n)}
 load(); checkAdmin();
-if(live) sb.auth.onAuthStateChange(()=>checkAdmin());
+if(live) sb.auth.onAuthStateChange(()=>setTimeout(checkAdmin,0));
 </script>
 </body>
 </html>
